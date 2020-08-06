@@ -1,0 +1,56 @@
+include-file = ~/.config/polybar/colors
+include-file = ~/.config/polybar/modules
+
+[bar/mybar]
+monitor = ${env:MONITOR:}
+bottom = false
+background = ${colors.background}
+foreground = ${colors.foreground}
+fixed-center = true
+width = 98%
+height = 30
+line-size = 2
+radius = 15
+border-color = ${colors.color3}
+line-color = ${colors.color3}
+
+offset-y = 10
+offset-x = 1%
+padding = 2
+
+wm-restack = bspwm
+override-redirect = false
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+enable-ipc = true
+
+font-0 = "Fira Code:style=Regular:pixelsize=12;2"
+font-1 = "Fira Code:size=12;2"
+font-2 = "Font Awesome 5 Free:style=Solid:pixelsize=12;2"
+font-3 = "Font Awesome 5 Free:style=Regular:pixelsize=12;2"
+font-4 = "Font Awesome 5 Brands:pixelsize=12;2"
+
+
+modules-left =  bspwm mpd
+modules-center = date
+modules-right =  network memory cpu battery alsa
+
+; Position of the system tray window
+tray-position = left
+tray-maxsize = 15
+tray-background = ${colors.background}
+tray-offset-x = 0
+tray-offset-y = 0
+; Pad the sides of each tray icon
+tray-padding = 1
+
+[settings]
+label-focused-underline= ${colors.background}
+throttle-output = 5
+throttle-output-for = 10
+throttle-input-for = 30
+screenchange-reload = true
+kseudo-transparency = true
+
+; vim:ft=dosini
