@@ -2,44 +2,54 @@
 call plug#begin()
 
 Plug 'godlygeek/tabular'
+
+" Syntax
 Plug 'stephpy/vim-yaml'
 Plug 'plasticboy/vim-markdown'
 Plug 'mattn/emmet-vim'
+Plug 'cespare/vim-toml'
 
-
+" UI
 Plug 'morhetz/gruvbox', {'as' : 'gruvbox'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
+Plug 'ap/vim-css-color'
+Plug 'luochen1990/rainbow'
 
-Plug 'junegunn/rainbow_parentheses.vim'
+" NerdTree
 Plug 'xuyuanp/nerdtree-git-plugin'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
+
 Plug 'airblade/vim-gitgutter'
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'townk/vim-autoclose'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'autozimu/LanguageClient-neovim', {
 	\ 'branch' : 'next',
 	\ 'do' : 'bash install.sh',
 	\ }
-Plug 'ap/vim-css-color'
+
 Plug 'google/vim-maktaba'
 Plug 'google/vim-codefmt'
+Plug 'google/vim-glaive'
+
 Plug 'prettier/vim-prettier', {'do' : 'yarn install'}
 
 Plug 'neovimhaskell/haskell-vim'
 Plug 'alx741/vim-hindent'
 
-Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
-Plug 'cespare/vim-toml'
+Plug 'HerringtonDarkholme/yats.vim' " TypeScript
+Plug 'rhysd/vim-clang-format' " C++
 
 call plug#end()
+call glaive#Install()
 
-set shiftwidth=4
+set shiftwidth=2
 set autoindent
 set smartindent
 set termguicolors
@@ -56,8 +66,9 @@ let g:airline_powerline_fonts = 1
 syntax on
 
 augroup autoformat_settings
-	autocmd FileType python AutoFormatBuffer yapf
-	autocmd FileType rust AutoFormatBuffer rustfmt
+    autocmd FileType c,cpp AutoFormatBuffer clang-format
+    autocmd FileType python AutoFormatBuffer yapf
+    autocmd FileType rust AutoFormatBuffer rustfmt
 augroup END
 
 
@@ -99,5 +110,21 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 
+" Moving lines up and down
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+
+nmap <Up> <Nop>
+nmap <Down> <Nop>
+nmap <Left> <Nop>
+nmap <Right> <Nop>
+
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeShowHidden = 1
+
+autocmd FileType cpp nmap <F4> :!make %:r && ./%:r<CR>
+autocmd FileType cpp nmap <F5> :!./%:r<CR>
