@@ -1,0 +1,31 @@
+# !/bin/bash
+
+if [ "$#" == 0 ]
+then
+  echo "Please provide target directory"
+else
+  mkdir "$1"
+  rm -r "$1"/.config
+  mkdir "$1"/.config
+
+  cp -r ~/.config/bspwm "$1"/.config
+  cp -r ~/.config/sxhkd "$1"/.config
+  cp -r ~/.config/polybar "$1"/.config
+  cp -r ~/.config/alacritty "$1"/.config
+
+  mkdir "$1"/.config/nvim
+  cp ~/.config/nvim/init.vim "$1"/.config/nvim/init.vim
+
+  cp -r ~/.config/gtk-3.0 "$1"/.config
+  cp -r ~/.config/.themes "$1"/.config
+  cp -r ~/.themes/Kripton "$1"/.themes
+
+  cp ~/.config/picom.conf "$1"/.config
+  cp ~/current-wallpaper.jpg "$1"
+  cp ~/aliases.sh "$1"
+  cp ~/.bashrc "$1"
+  cp ~/store-conf "$1"
+fi
+
+
+# vim:ft=sh

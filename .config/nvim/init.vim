@@ -1,7 +1,8 @@
 
 call plug#begin()
-
 Plug 'godlygeek/tabular'
+
+Plug 'yegappan/taglist'
 
 " Syntax
 Plug 'stephpy/vim-yaml'
@@ -15,7 +16,6 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
 Plug 'ap/vim-css-color'
-Plug 'luochen1990/rainbow'
 
 " NerdTree
 Plug 'xuyuanp/nerdtree-git-plugin'
@@ -23,33 +23,50 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 
 Plug 'airblade/vim-gitgutter'
-
-Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+
+" Parentheses related
+Plug 'tpope/vim-surround'
+Plug 'luochen1990/rainbow'
 Plug 'townk/vim-autoclose'
 
+" Autocompletion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'autozimu/LanguageClient-neovim', {
 	\ 'branch' : 'next',
 	\ 'do' : 'bash install.sh',
 	\ }
 
+" Google code formatting libraries
 Plug 'google/vim-maktaba'
 Plug 'google/vim-codefmt'
 Plug 'google/vim-glaive'
 
 Plug 'prettier/vim-prettier', {'do' : 'yarn install'}
 
+" Haskell
 Plug 'neovimhaskell/haskell-vim'
 Plug 'alx741/vim-hindent'
+
+" Elm
+Plug 'elm-tooling/elm-vim' 
+Plug 'andys8/vim-elm-syntax'
 
 Plug 'HerringtonDarkholme/yats.vim' " TypeScript
 Plug 'rhysd/vim-clang-format' " C++
 
+Plug 'OmniSharp/omnisharp-vim' "C#
+
+Plug  'FredKSchott/CoVim' "Liveshare
 call plug#end()
 call glaive#Install()
 
+" Editor presets
+
+set tabstop=2
 set shiftwidth=2
+set expandtab
+
 set autoindent
 set smartindent
 set termguicolors
@@ -64,12 +81,15 @@ set colorcolumn=80
 colorscheme gruvbox
 let g:airline_powerline_fonts = 1
 syntax on
+filetype on
 
 augroup autoformat_settings
-    autocmd FileType c,cpp AutoFormatBuffer clang-format
+    autocmd FileType c,cpp ClangFormatAutoEnable
     autocmd FileType python AutoFormatBuffer yapf
     autocmd FileType rust AutoFormatBuffer rustfmt
 augroup END
+
+au BufRead,BufNewFile *.cppm set ft=cpp
 
 
 hi Normal guibg=NONE ctermbg=NONE
@@ -82,7 +102,7 @@ let g:LanguageClient_serverCommands = {
 
 let g:rustfmt_autosave = 1
 let g:prettier#autoformat = 1
-
+let g:elm_format_autosave = 1
 
 let g:coc_global_extensions = [
     \ 'coc-snippets',
@@ -92,6 +112,8 @@ let g:coc_global_extensions = [
     \ 'coc-json',
     \ ]
 
+" Enable parentheses coloring
+let g:rainbow_active = 1
 
 nmap <C-p> :CocCommand prettier.formatFile
 
@@ -109,6 +131,7 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+nmap <C-h> :CocCommand clangd.switchSourceHeader<CR>
 
 " Moving lines up and down
 nnoremap <A-j> :m .+1<CR>==
@@ -118,13 +141,36 @@ inoremap <A-k> <Esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
+" Alternative Escape + prevent moving cursor back
+inoremap jk <Esc>l
+inoremap <Esc> <Esc>l
+
 nmap <Up> <Nop>
 nmap <Down> <Nop>
 nmap <Left> <Nop>
 nmap <Right> <Nop>
 
+" NerdTree
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeShowHidden = 1
 
-autocmd FileType cpp nmap <F4> :!make %:r && ./%:r<CR>
-autocmd FileType cpp nmap <F5> :!./%:r<CR>
+
+let g:clang_cpp_options = '-std=c++17'
+" Clang formatter style
+let g:clang_format#style_options = {
+  \ "AccessModifierOffset" : -2,
+  \ "AllowShortBlocksOnASingleLine" : "true",
+  \ "AllowShortIfStatementsOnASingleLine" : "WithoutElse",
+  \ "AlwaysBreakTemplateDeclarations" : "true",
+  \ "Standard" : "C++11",
+  \ "BreakBeforeBraces" : "Allman",
+  \ "AlignAfterOpenBracket": "AlwaysBreak"}
+
+" configure clojure folding
+let g:clojure_foldwords = "def,defn,defmacro,defmethod,defschema,defprotocol,defrecord"
+
+" a few extra mappings for fireplace
+" evaluate top level form
+au BufEnter *.clj nnoremap <buffer> cpt :Eval<CR>
+" show last evaluation in temp file
+au BufEnter *.clj nnoremap <buffer> cpl :Last<CR>

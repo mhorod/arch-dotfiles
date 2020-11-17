@@ -4,19 +4,19 @@ include-file = ~/.config/polybar/modules
 [bar/mybar]
 monitor = ${env:MONITOR:}
 bottom = false
-background = ${colors.background}
+background = #aa111111
 foreground = ${colors.foreground}
 fixed-center = true
-width = 98%
+width = 100%
 height = 30
 line-size = 2
-radius = 15
+radius = 0
 border-color = ${colors.color3}
 line-color = ${colors.color3}
 
-offset-y = 10
-offset-x = 1%
-padding = 2
+offset-y = 0
+offset-x = 0
+padding = 5
 
 wm-restack = bspwm
 override-redirect = false
@@ -32,14 +32,13 @@ font-3 = "Font Awesome 5 Free:style=Regular:pixelsize=12;2"
 font-4 = "Font Awesome 5 Brands:pixelsize=12;2"
 
 
-modules-left =  bspwm mpd
+modules-left =  bspwm mpd 
 modules-center = date
-modules-right =  network memory cpu battery alsa
+modules-right =  network memory cpu alsa
 
 ; Position of the system tray window
 tray-position = left
 tray-maxsize = 15
-tray-background = ${colors.background}
 tray-offset-x = 0
 tray-offset-y = 0
 ; Pad the sides of each tray icon
