@@ -2,9 +2,9 @@
 call plug#begin()
 Plug 'godlygeek/tabular'
 
-Plug 'yegappan/taglist'
 
 " Syntax
+Plug 'chiel92/vim-autoformat'
 Plug 'stephpy/vim-yaml'
 Plug 'plasticboy/vim-markdown'
 Plug 'mattn/emmet-vim'
@@ -46,7 +46,6 @@ Plug 'prettier/vim-prettier', {'do' : 'yarn install'}
 
 " Haskell
 Plug 'neovimhaskell/haskell-vim'
-Plug 'alx741/vim-hindent'
 
 " Elm
 Plug 'elm-tooling/elm-vim' 
@@ -87,9 +86,11 @@ augroup autoformat_settings
     autocmd FileType c,cpp ClangFormatAutoEnable
     autocmd FileType python AutoFormatBuffer yapf
     autocmd FileType rust AutoFormatBuffer rustfmt
+    autocmd FileType java AutoFormatBuffer java-format
 augroup END
 
 au BufRead,BufNewFile *.cppm set ft=cpp
+au BufRead,BufNewFile *.fish set ft=sh
 
 
 hi Normal guibg=NONE ctermbg=NONE
@@ -97,9 +98,9 @@ let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
     \ 'python' : ['/usr/local/bin/pyls'],
     \ 'haskell' : ['hie-wrapper', '--lsp'],
-    \ 'cpp' : ['clangd'],
+    "\ 'cpp' : ['clangd'],
     \ }
-
+autocmd FileType c,cpp ClangFormatAutoEnable
 let g:rustfmt_autosave = 1
 let g:prettier#autoformat = 1
 let g:elm_format_autosave = 1
@@ -115,6 +116,7 @@ let g:coc_global_extensions = [
 " Enable parentheses coloring
 let g:rainbow_active = 1
 
+noremap <F3> :Autoformat<CR>
 nmap <C-p> :CocCommand prettier.formatFile
 
 inoremap <silent><expr> <C-space> coc#refresh()
@@ -166,11 +168,4 @@ let g:clang_format#style_options = {
   \ "BreakBeforeBraces" : "Allman",
   \ "AlignAfterOpenBracket": "AlwaysBreak"}
 
-" configure clojure folding
-let g:clojure_foldwords = "def,defn,defmacro,defmethod,defschema,defprotocol,defrecord"
 
-" a few extra mappings for fireplace
-" evaluate top level form
-au BufEnter *.clj nnoremap <buffer> cpt :Eval<CR>
-" show last evaluation in temp file
-au BufEnter *.clj nnoremap <buffer> cpl :Last<CR>
